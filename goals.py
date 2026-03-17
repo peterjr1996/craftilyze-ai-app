@@ -6,4 +6,3 @@ def break_goal_into_actions(goal):
     if "grow" in goal.lower():
         return ["Upload content 3x/week", "Engage audience", "Analyze metrics"]
     return ["Break goal into actionable steps"]
-    
