@@ -4,38 +4,37 @@ from openai import OpenAI
 
 load_dotenv()
 
-api_key = os.getenv("OPENAI_API_KEY")
+def generate_personalized_schedule(wake_time, goals, style, preferences):
+    api_key = os.getenv("OPENAI_API_KEY")
 
-def adjust_schedule(schedule, feedback):
     if not api_key:
         return "Missing OPENAI_API_KEY in .env file."
 
     client = OpenAI(api_key=api_key)
 
     prompt = f"""
-A user followed this schedule:
+Build a personalized daily schedule.
 
-{schedule}
-
-Their reflection for the day was:
-{feedback}
-
-Create a better schedule for tomorrow.
+User wake time: {wake_time}
+User goals: {', '.join(goals)}
+Planning style: {style}
+User preferences: {preferences}
 
 Requirements:
 - realistic
-- practical
 - balanced
+- clear and practical
+- should reflect the user's preferences
 - avoid overload
-- improve consistency
-- return concise schedule lines
+- include time blocks
 
 Return EXACTLY in this format:
-07:30 - Wake up
-08:00 - Breakfast
-08:30 - Gym
-10:00 - Work block
-12:30 - Lunch
+05:00 - Wake up
+05:30 - Morning routine
+06:00 - Workout
+07:00 - Breakfast
+08:00 - Focus work
+12:00 - Lunch
 """
 
     response = client.chat.completions.create(
@@ -43,7 +42,7 @@ Return EXACTLY in this format:
         messages=[
             {
                 "role": "system",
-                "content": "You refine daily schedules based on reflection, habits, and practical time management."
+                "content": "You help users build practical daily schedules based on goals, preferences, and personal style."
             },
             {
                 "role": "user",
